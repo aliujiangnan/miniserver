@@ -22,13 +22,17 @@ struct MessageHead
     {}
     void hton()
     {
+        printf("size1,%d\n",size);
         size = htonl(size);
+        printf("size2,%d\n",size);
         cmd  = htons(cmd);
         flag = htons(flag);
     }
     void ntoh()
     {
+        printf("size3,%d\n",size);
         size = ntohl(size);
+        printf("size4,%d\n",size);
         cmd  = ntohs(cmd);
         flag = ntohs(flag);
     }
@@ -51,6 +55,7 @@ public:
 
     size_t appendHead(size_t index_, const char* buff, size_t len)
     {
+        printf("size5,%d\n",m_head.size);
         size_t will_append = sizeof(m_head) - index_;
         if (will_append > len)
         {
@@ -62,13 +67,16 @@ public:
             ::memcpy((char*)&m_head + index_, buff, will_append);
             m_head.ntoh();
         }
+        printf("size7,%d\n",m_head.size);
         return will_append;
     }
     size_t appendMsg(const char* buff, size_t len)
     {
+        printf("size6,%d\n",m_head.size);
         size_t will_append = m_head.size - m_body.size();
         if (will_append > len) will_append = len;
         m_body.append(buff, will_append);
+        printf("size8,%d\n",m_head.size);
         return will_append;
     }
     void clear()

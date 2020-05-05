@@ -574,11 +574,6 @@ public:
     ffpython_t()
     {
         if (!Py_IsInitialized()){
-#ifdef _WIN32
-            char pyhome[128] = {0};
-            snprintf(pyhome, sizeof(pyhome), "%s", "C:\\Python27");
-            Py_SetPythonHome(pyhome);
-#endif
             Py_Initialize();
         }
     }
@@ -798,7 +793,7 @@ public:
         pytype_tool_impl_t<RET_V> pyret;
         return pycall_t::call<RET_V>(mod_name_, func_, args, pyret);
     }
-    //!call python class method begin******************************************************************
+    //!call python class method begin
     template<typename RET>
     RET_V obj_call(PyObject* pobj, const string& func_)
     {
@@ -885,9 +880,9 @@ public:
         pytype_tool_impl_t<RET_V> pyret;
         return pycall_t::call_obj_method<RET_V>(pobj, func_, args, pyret);
     }
-    //!call python class method end******************************************************************
+    //!call python class method end
 
-    //!call python lambad function begin ############################################################
+    //!call python lambad function begin
     template<typename RET>
     RET_V call_lambda(PyObject* pobj)
     {
@@ -974,7 +969,7 @@ public:
         pytype_tool_impl_t<RET_V> pyret;
         return pycall_t::call_lambda<RET_V>(pobj, args, pyret);
     }
-    //!call python lambad function ennd ############################################################
+    //!call python lambad function ennd 
     template<typename RET>
     RET_V get_global_var(const string& mod_name_, const string& var_name_)
     {
@@ -1159,7 +1154,6 @@ private:
                             m_func_info[i].func_name.c_str()
                 );
 
-            // printf(buff);
             PyRun_SimpleString(buff);
         }
 
@@ -1460,10 +1454,6 @@ private:
 };
 
 
-
-
-
-
 template<typename T>
 struct type_ref_traits_t
 {
@@ -1553,18 +1543,10 @@ IMPL_INT_CODE(unsigned short)
 IMPL_INT_CODE(char)
 IMPL_INT_CODE(unsigned char)
 
-#ifdef _WIN32
-IMPL_INT_CODE(unsigned long)
-#ifdef WIN_GCC
-IMPL_INT_CODE(long long)
-IMPL_INT_CODE(unsigned long long)
-#endif
-#else
 #ifndef __x86_64__
 IMPL_INT_CODE(int64_t)
 #endif
 IMPL_INT_CODE(uint64_t)
-#endif
 
 template<typename T>
 struct pytype_traits_t<const T*>
@@ -1671,17 +1653,6 @@ struct pytype_traits_t<const char*>
     {
         return PyString_FromString(val_);
     }
-    /*
-    static int pyobj_to_cppobj(PyObject *pvalue_, char*& m_ret)
-    {
-        if (true == PyString_Check(pvalue_))
-        {
-            m_ret = PyString_AsString(pvalue_);
-            return 0;
-        }
-        return -1;
-    }
-    */
     static const char* get_typename() { return "string";}
 };
 
@@ -1692,17 +1663,6 @@ struct pytype_traits_t<char*>
     {
         return PyString_FromString(val_);
     }
-    /*
-    static int pyobj_to_cppobj(PyObject *pvalue_, char*& m_ret)
-    {
-        if (true == PyString_Check(pvalue_))
-        {
-            m_ret = PyString_AsString(pvalue_);
-            return 0;
-        }
-        return -1;
-    }
-    */
     static const char* get_typename() { return "string";}
 };
 
@@ -1776,19 +1736,6 @@ struct pytype_traits_t<string>
             PyString_AsStringAndSize(pvalue_, &pDest, &nLen);
             m_ret.assign(pDest, nLen);
             return 0;
-            /*
-#ifdef _WIN32
-            PyObject* retStr = PyUnicode_AsEncodedString(pvalue_, "gbk", "");
-#else
-            PyObject* retStr = PyUnicode_AsUTF8String(pvalue_);
-#endif
-            if (retStr)
-            {
-                m_ret = PyString_AsString(retStr);
-                Py_XDECREF(retStr);
-                return 0;
-            }
-            */
         }
         return -1;
     }
@@ -2162,7 +2109,6 @@ struct pyext_tool_t
     template<typename T>
     pyext_tool_t& parse_arg(T& ret_arg_)
     {
-        //typedef typename type_ref_traits_t<T>::value_t value_t;
         if (false == m_err)
         {
             if (m_index >= m_size)

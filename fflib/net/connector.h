@@ -38,29 +38,31 @@ public:
         Socketfd s;
         struct sockaddr_in addr;
 
+        //! 1.创建TCP socketfd
         if((s = socket(AF_INET,SOCK_STREAM,0)) < 0)
         {
             perror("socket");
             return ret;
         }
-        /* 填写sockaddr_in结构*/
+        //! 2.初始化一个sockaddr_in结构体
         bzero(&addr,sizeof(addr));
 
         addr.sin_family      = AF_INET;
-        addr.sin_port        = htons(atoi(vt2[1].c_str()));
+        addr.sin_port        = htons(atoi(vt2[1].c_str())); //! 大端存储(网络字节顺序)
         addr.sin_addr.s_addr = inet_addr(vt2[0].c_str());
-        /* 尝试连线*/
+        
+        //! 3.尝试建立连接
         if(::connect(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
         {
             perror("connect");
             return ret;
         }
         SocketProtocolPtr prot = new SocketProtocol(f);
-        SharedPtr<SocketTcp> skt = new SocketTcp(e_, funcbind(&SocketProtocol::handleSocketEvent, prot), s);
+        SharedPtr<SocketTcp> skt = new SocketTcp(e_, funcbind(&SocketProtocol::handleSocketEvent, prot), s); //ref=1
         ret = skt;
-        skt->refSelf(skt);
+        skt->refSelf(skt);                                                                                   //ref=2
         ret->open();
-        return ret;
+        return ret;                                                                                          //ref=1
     }
 
 };

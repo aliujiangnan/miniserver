@@ -200,7 +200,7 @@ int IOEventEpoll::regfdAccept(Socketfd fd, IOEventFunc eventHandler)
     struct epoll_event ee = { 0, { 0 } };
     ee.data.fd   = fd;
     ee.events    = EPOLLIN | EPOLLPRI | EPOLLOUT | EPOLLHUP | EPOLLET;;
-    printf("IOEventEpoll::regfd2 fd=%d\n", fd);
+    printf("IOEventEpoll::regfdAccept fd=%d\n", fd);
     return ::epoll_ctl(m_efd, EPOLL_CTL_ADD, fd, &ee);
 }
 int IOEventEpoll::unregfd(Socketfd fd)

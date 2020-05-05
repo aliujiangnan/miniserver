@@ -243,7 +243,7 @@ public:
         }
         if ((int)cacheRecvData.size() < (1 + nPlayLoadLenByteNum + nMaskingKeyByteNum))
         {
-            return true;
+            return true;//??????????????????
         }
         if (nPayload_length == 126)
         {
@@ -317,6 +317,7 @@ public:
     }
     std::string buildPkg(const std::string& dataBody, int opcode = 0x01)
     {
+        printf("buildPkg:%s\n", dataBody.c_str());
         int nBodyLenByteNum = 0;
         if (dataBody.size() >= 65536)
         {
@@ -351,7 +352,7 @@ public:
             ret[1] = 127;
 
             size_t extsize = dataBody.size();
-            int64_t extsizeNet = ws_hton64((int64_t)extsize);//System.Net.IPAddress.HostToNetworkOrder((long)extsize);
+            int64_t extsizeNet = ws_hton64((int64_t)extsize);
             ret.append((const char*)(&extsizeNet), sizeof(extsizeNet));
             ret += dataBody;
         }

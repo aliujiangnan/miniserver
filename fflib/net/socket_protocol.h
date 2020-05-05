@@ -28,6 +28,7 @@ public:
     }
     void handleSocketEvent(SocketObjPtr sp_, int eventType, const char* buff, size_t len)
     {
+        printf("size9,%d\n",m_message.getHead().size);
         if (eventType == IOEVENT_BROKEN){
             if (m_funcProtocol){
                 m_funcProtocol(sp_, IOEVENT_BROKEN, m_message);
@@ -112,15 +113,18 @@ public:
                 m_nGotSize += tmp;
                 left_len         -= tmp;
                 buff             += tmp;
+
+                printf("protocol1:%d,%d,%d,%d,%d\n",tmp,m_nGotSize,left_len,m_message.size(),m_message.getBody().size());
             }
 
             tmp = m_message.appendMsg(buff, left_len);
             m_nGotSize += tmp;
             left_len         -= tmp;
             buff             += tmp;
-
+            printf("protocol2:%d,%d,%d,%d,%d\n",tmp,m_nGotSize,left_len,m_message.size(),m_message.getBody().size());
             if (m_message.getBody().size() == m_message.size())
             {
+                printf("protocol3:%d,%d,%d,%d,%d\n",tmp,m_nGotSize,left_len,m_message.size(),m_message.getBody().size());
                 this->postMsg(sp_);
                 m_nGotSize = 0;
                 m_message.clear();

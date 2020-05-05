@@ -57,7 +57,7 @@ struct SocketOp
             nread = read(fd, recv_buffer, sizeof(recv_buffer));
             if (nread == 0)
             {
-                return -1;
+                return -1;//???????????
             }
             else if (nread < 0)
             {

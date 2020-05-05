@@ -30,12 +30,6 @@ class TimerService
         {
             pair_fds[0] = -1;
             pair_fds[1] = -1;
-            #ifndef _WIN32
-            assert(0 == ::socketpair(AF_LOCAL, SOCK_STREAM, 0, pair_fds));
-            if (write(pair_fds[1], "0", 1)){
-                //!just for warning
-            }
-            #endif // _WIN32
         }
         ~InteruptInfo()
         {

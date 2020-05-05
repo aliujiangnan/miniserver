@@ -45,6 +45,7 @@ int AcceptorTcp::open(const string& address_)
     StrTool::split(vt[1], vt2, ":");
     if(vt2.size() != 2) return -1;
 
+    //! 1.初始化一个addrinfo结构体
     struct addrinfo hints;
     bzero(&hints, sizeof(struct addrinfo) );
     hints.ai_family      = AF_UNSPEC;
@@ -57,7 +58,8 @@ int AcceptorTcp::open(const string& address_)
     const char* host = NULL;
     if (vt2[0] != "*") host = vt2[0].c_str();
 
-    if ((ret = getaddrinfo(host, vt2[1].c_str(), &hints, &res)) != 0)
+    //! 2.获取地址信息写入一个addrinfo指针中
+    if ((ret = getaddrinfo(host, vt2[1].c_str(), &hints, &res)) != 0) 
     {
         fprintf(stderr, "AcceptorTcp::open getaddrinfo: %s, address_=<%s>\n", gai_strerror(ret), address_.c_str());
         return -1;
@@ -66,29 +68,38 @@ int AcceptorTcp::open(const string& address_)
     Socketfd tmpfd = -1;
     Socketfd nInvalid = -1;
 
+    //! 3.创建TCP socketfd
     if ((tmpfd = ::socket(res->ai_family, res->ai_socktype, res->ai_protocol)) == nInvalid)
     {
         perror("AcceptorTcp::open when socket");
         return -1;
     }
 
+    //! 4.设置可重用本地地址与端口
     if (::setsockopt(tmpfd, SOL_SOCKET, SO_REUSEADDR, (const char*)&yes, sizeof(int)) == -1)
     {
         perror("AcceptorTcp::open when setsockopt");
         return -1;
     }
+
+    //! 5.绑定IP和端口
     if (::bind(tmpfd, res->ai_addr, res->ai_addrlen) == -1)
     {
         fprintf(stderr, "AcceptorTcp::open when bind: %s, address_=<%s>\n", strerror(errno), address_.c_str());
         return -1;
     }
 
+    //! 6.设置非阻塞模式
     SocketOp::set_nonblock(tmpfd);
+
+    //! 7.设置最大等待连接数为5
     if (::listen(tmpfd, LISTEN_BACKLOG) == -1)
     {
         perror("AcceptorTcp::open when listen");
         return -1;
     }
+
+    //! 8.释放addrinfo
     ::freeaddrinfo(res);
     m_fdListen = tmpfd;
     LOGTRACE(("ACCEPTOR", "accept ok %s", address_));
@@ -96,7 +107,6 @@ int AcceptorTcp::open(const string& address_)
 }
 void AcceptorTcp::handleEvent(Socketfd fdEvent, int eventType, const char* data, size_t len)
 {
-    LOGTRACE(("ACCEPTOR", "AcceptorTcp::handleEvent eventType=%d, data=%s, len=%d", eventType, data, len));
     if (eventType != IOEVENT_ACCEPT){
         return;
     }

@@ -4,7 +4,7 @@
 #include "base/perf_monitor.h"
 #include "server/http_mgr.h"
 
-// #define _DRAW
+#define _DRAW 1
 #ifdef _DRAW
 #include "draw/main.h"
 using namespace draw;

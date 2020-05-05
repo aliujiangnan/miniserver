@@ -10,8 +10,8 @@
 class ArgHelper
 {
 public:
-    ArgHelper(){}
-    ArgHelper(int argc, char* argv[])
+    ArgHelper() {}
+    ArgHelper(int argc, char *argv[])
     {
         for (int i = 0; i < argc; ++i)
         {
@@ -32,7 +32,7 @@ public:
             loadFromFile(getOptionValue("-f"));
         }
     }
-    bool load(int argc, char* argv[])
+    bool load(int argc, char *argv[])
     {
         for (int i = 0; i < argc; ++i)
         {
@@ -45,20 +45,20 @@ public:
         return true;
     }
     std::string getOption(int idx_) const
-    {   
+    {
         if ((size_t)idx_ >= m_args.size())
-        {   
-                return ""; 
-        }   
+        {
+            return "";
+        }
         return m_args[idx_];
-    }   
+    }
     bool isEnableOption(std::string opt_) const
     {
         for (size_t i = 0; i < m_args.size(); ++i)
         {
             if (opt_ == m_args[i])
             {
-                    return true;
+                return true;
             }
         }
         return false;
@@ -67,39 +67,39 @@ public:
     {
         std::string ret;
         for (size_t i = 0; i < m_args.size(); ++i)
-        {   
+        {
             if (opt_ == m_args[i])
-            {   
-                size_t value_idx = ++ i;
+            {
+                size_t value_idx = ++i;
                 if (value_idx >= m_args.size())
                 {
-                        return ret;
+                    return ret;
                 }
                 ret = m_args[value_idx];
                 return ret;
-            }   
-        }	
+            }
+        }
         return ret;
     }
-    std::string setOptionValue(const std::string& opt_, const std::string& ret) 
+    std::string setOptionValue(const std::string &opt_, const std::string &ret)
     {
         for (size_t i = 0; i < m_args.size(); ++i)
-        {   
+        {
             if (opt_ == m_args[i])
-            {   
-                size_t value_idx = ++ i;
+            {
+                size_t value_idx = ++i;
                 if (value_idx >= m_args.size())
                 {
                     m_args.push_back(ret);
                 }
                 return ret;
-            }   
-        }	
+            }
+        }
         m_args.push_back(opt_);
         m_args.push_back(ret);
         return ret;
     }
-    int loadFromFile(const std::string& file_)
+    int loadFromFile(const std::string &file_)
     {
         std::ifstream inf(file_.c_str());
         std::string all;
@@ -110,7 +110,7 @@ public:
             {
                 break;
             }
-            if (tmp.empty() == false && tmp[0] == '#')//!过滤注释
+            if (tmp.empty() == false && tmp[0] == '#') //!过滤注释
             {
                 continue;
             }
@@ -123,9 +123,9 @@ public:
         m_args.insert(m_args.end(), v.begin(), v.end());
         return 0;
     }
+
 private:
-    std::vector<std::string>  m_args;
+    std::vector<std::string> m_args;
 };
 
 #endif
-

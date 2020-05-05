@@ -18,10 +18,10 @@ struct MapObj
             if(nullptr != pit->second)
             {
                 Player* player = pit->second;
-                allPlayers.erase(pit->first);
                 delete player;
             }
         }
+        allPlayers.clear();
 
         std::map<int, Team*>::iterator tit = allTeams.begin();
         for (; tit != allTeams.end(); ++tit)
@@ -29,10 +29,10 @@ struct MapObj
             if(nullptr != tit->second)
             {
                 Team* team = tit->second;
-                allTeams.erase(tit->first);
                 delete team;
             }
         }
+        allTeams.clear();
     }
 
     int getPlayerNum()
@@ -176,10 +176,10 @@ struct MapObjMgr
             if(nullptr != it->second)
             {
                 MapObj* mapObj = it->second;
-                allMaps.erase(it->first);
                 delete mapObj;
             }
         }
+        allMaps.clear();
     }
     
     static MapObjMgr* getInstance();

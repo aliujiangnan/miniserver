@@ -22,6 +22,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    SignalHelper::bloack();
     ArgHelper& arg_helper = Singleton<ArgHelper>::instance();
 	arg_helper.load(argc, argv);
     if (arg_helper.isEnableOption("-f"))
